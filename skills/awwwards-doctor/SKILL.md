@@ -8,7 +8,8 @@ description: Use when awwwards-mcp scraping or tools stop working — BlockedErr
 You are repairing the awwwards-mcp toolchain or working around it mid-task.
 Work in this order: **diagnose → fix mechanically → fix parsers (if drift) →
 recover the user's task**. Never delete user data; the only destructive step
-(cache DB moved aside) preserves the old file in the OS temp dir.
+(cache DB moved aside) keeps the old file — in the OS temp dir for `--fix`,
+beside the cache after a full backup for the manual reset.
 
 > **Profile note:** this skill's tools are `search_sites`, `get_site_details`,
 > `capture_live_site`, `analyze_page_structure`, `capture_component`,
@@ -23,7 +24,13 @@ recover the user's task**. Never delete user data; the only destructive step
 > `audit_page {request:{kind:"images", url}}` instead. Full mapping:
 > [v2-routing.md](v2-routing.md).
 
-## 1. Run the doctor (repo checkout)
+## 1. Run the doctor (awwwards-mcp source checkout)
+
+Run these from the root of the **awwwards-mcp source checkout**
+([github.com/INSANE0777/Awwwards-mcp](https://github.com/INSANE0777/Awwwards-mcp)),
+the repository whose `package.json` is `awwwards-mcp` — not from an
+`awwwards-skills` checkout. The npm package does not ship these scripts; if you
+installed the server, use section 3 instead.
 
 ```bash
 npm run doctor             # diagnose only
@@ -57,8 +64,9 @@ Repair sequence — keep it mechanical, verify at each step:
    card JSON blob, the Elements section heading, the og:image meta).
 3. **Re-anchor the parsers** in `src/parsers.ts` — change the minimum needed
    (one split/indexOf/regex literal), not the surrounding logic.
-4. **Update the probe list** in `scripts/parser-drift-probe.mjs`
-   (`PROBE_GROUPS`) so the same failure is detectable next time.
+4. **Update the probe list** in `scripts/parser-drift-probe.mjs` (in the same
+   awwwards-mcp checkout; `PROBE_GROUPS`) so the same failure is detectable
+   next time.
 5. **Refresh the fixture**: download the live page with the same UA the
    client uses and replace `test/fixtures/listing.html` (or the detail
    fixture). The offline tests run against fixtures only — a refreshed
@@ -83,9 +91,26 @@ The doctor scripts live in the repo, so for an npm-installed server:
    "broken" reports are old parsers fixed in a newer release.
    `AWWWARDS_AUTO_UPDATE=1` in the MCP server env opts into background
    self-update on startup.
-2. Reset local state: `rm -rf ~/.awwwards-mcp` is safe (cache + index +
-   version-check state rebuild automatically; nothing user-authored lives
-   there).
+2. **Back up, then reset only the database.** Stop the agent/MCP server first
+   so the DB is not mid-write. Resolve the cache root with
+   `CACHE="${AWWWARDS_CACHE_DIR:-$HOME/.awwwards-mcp}"` (the server reads the
+   same variable). Copy it aside first, then move only the SQLite files; the
+   next index/run rebuilds them:
+
+   ```bash
+   CACHE="${AWWWARDS_CACHE_DIR:-$HOME/.awwwards-mcp}"
+   STAMP="$(date +%Y%m%d-%H%M%S)"
+   cp -R "$CACHE" "$CACHE.backup-$STAMP"
+   mkdir -p "$CACHE.moved-$STAMP"
+   for f in "$CACHE"/cache.db*; do [ -e "$f" ] && mv "$f" "$CACHE.moved-$STAMP/"; done
+   ```
+
+   A blanket delete of the cache root would also destroy `preferences.json`
+   (setup choices), `skill-memory/findings.jsonl` (learned findings), winner
+   watches (rows inside `cache.db`), and captures in `images/` and
+   `scene-captures/`. The targeted reset loses only the search index and watch
+   rows — the index rebuilds, watches must be re-added — while preferences,
+   learned findings and captures are kept. Never `rm -rf` the cache root.
 3. If it still fails, it's upstream (block or drift): open an issue at the
    awwwards-mcp repo attaching the raw HTML of the failing URL.
 
@@ -128,7 +153,7 @@ The user's build/research doesn't wait for the repair. Degrade gracefully:
 
 ## Close the flywheel
 
-Repairs are the highest-value lessons - they were expensive to learn. In a repository checkout (the installed npm package does not ship this dev script), after a successful diagnosis + fix:
+Repairs are the highest-value lessons - they were expensive to learn. In a checkout of the awwwards-skills repository (the installed skill copy does not include this dev script), after a successful diagnosis + fix:
 `node scripts/skill-memory.mjs record --skill awwwards-doctor --phase repair --symptom "..." --rule "..." [--evidence <report path>]`. Distill folds recurring failure signatures into this installed copy so the next repair starts knowing them. When a rule proves out, `promote --skill awwwards-doctor` outputs it cleaned (no machine-local evidence paths) for the shipped-copy PR.
 
 ## Anti-patterns
@@ -140,6 +165,9 @@ Repairs are the highest-value lessons - they were expensive to learn. In a repos
 - "Fixing" parsers by loosening them to return empty results quietly — a
   parse that can't find its anchors must error loudly (that is the drift
   signal).
+- Blanket-deleting the cache root to "reset" — it destroys preferences,
+  learned findings, winner watches and captures. Back it up, then move only
+  `cache.db*`.
 - Treating the doctor's UNHEALTHY verdict as done because one check passed.
 
 <!-- skill-memory:start -->

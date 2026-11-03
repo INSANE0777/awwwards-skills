@@ -9,9 +9,12 @@ These skills are workflow instructions, not a standalone tool. They teach an
 agent the order to call the MCP tools in, what evidence to collect, what to
 ignore, and how to verify a build against a real reference.
 
+Tested with `awwwards-mcp` **1.17.1** and the `skills` CLI **1.7.6**.
+
 ## Requirements
 
-- Node.js **22.13 or newer** (the MCP server's engine requirement).
+- Node.js **22.20 or newer** for the `skills` CLI (tested with 1.7.6); the MCP
+  server itself requires **22.13+**. Node 22.20 covers both.
 - An agent that supports skills and MCP servers. The install examples below use
   the [`skills`](https://skills.sh) CLI; any agent that reads a skill directory
   can use the same files.
@@ -73,6 +76,15 @@ Restart the agent after registering the server.
 
 ## Install the skills
 
+Pin both the CLI and a release tag for a reproducible install (use the newest
+`skills-v*` tag):
+
+```bash
+npx skills@1.7.6 add INSANE0777/awwwards-skills@skills-v2026.11.05
+```
+
+Or follow the default branch:
+
 ```bash
 npx skills add INSANE0777/awwwards-skills
 ```
@@ -106,9 +118,9 @@ npx skills add INSANE0777/awwwards-skills -l
 npx skills add INSANE0777/awwwards-skills --all --json
 ```
 
-Each installed skill is self-contained: its directory carries `SKILL.md`, the
-`v2-routing.md` reference it links to, and — for the two skills that use it —
-`_memory/techniques.json`. If you install by hand, copy the whole
+Each installed skill is self-contained: its directory carries `SKILL.md`,
+`LICENSE`, the `v2-routing.md` reference it links to, and — for the two skills
+that use it — `_memory/techniques.json`. If you install by hand, copy the whole
 `skills/<name>/` directory, not only `SKILL.md`.
 
 ## The skills
@@ -164,16 +176,71 @@ Optional extras:
 - Performance audits use an installed Chrome or Edge over CDP rather than
   Playwright.
 
-## Repo-checkout-only commands
+## Checkout-only commands
 
-Some skills mention scripts that live only in the
-[awwwards-mcp source repository](https://github.com/INSANE0777/Awwwards-mcp):
-`scripts/doctor.mjs`, `scripts/parser-drift-probe.mjs` and
-`scripts/record-scrollthrough.mjs`. They are not part of this skills repository
-and are not shipped in the npm package. `scripts/skill-memory.mjs` now lives
-here; run it from a checkout of this repository. The skills label those steps
+Some steps use scripts that are **not shipped in the installed copies**. Run
+each from the checkout named below:
+
+| Script | Checkout / working directory | Installed fallback |
+|---|---|---|
+| `scripts/doctor.mjs` | [awwwards-mcp](https://github.com/INSANE0777/Awwwards-mcp) — run `npm run doctor` from that repo's root | Update `awwwards-mcp` (or clear the npx cache) and restart; then use the doctor skill's backup + targeted reset (below) |
+| `scripts/parser-drift-probe.mjs` | the same awwwards-mcp checkout (the doctor runs it) | none — attach the raw failing HTML to an MCP issue |
+| `scripts/record-scrollthrough.mjs` | the same awwwards-mcp checkout (playwright + ffmpeg-static are its devDependencies) | `record_site_motion` MCP tool |
+| `scripts/skill-memory.mjs` | **this** awwwards-skills checkout, repo root | none — the journal and distill step stay in the checkout |
+
+The MCP npm package does not include the first three scripts, and an installed
+skill copy does not include `skill-memory.mjs`. The skills label those steps
 **repo-checkout only**; everything else works with the installed or `npx`
 server.
+
+## Safety and backups
+
+The skills never ask you to delete the cache root. The manual reset in
+`awwwards-doctor` backs up `$AWWWARDS_CACHE_DIR` (default `~/.awwwards-mcp`)
+and moves only `cache.db*` aside: the search index rebuilds and watches must
+be re-added. Setup
+preferences (`preferences.json`), learned findings
+(`skill-memory/findings.jsonl`) and captures (`images/`, `scene-captures/`) are
+kept. The exact commands are in `skills/awwwards-doctor/SKILL.md`, section 3.
+
+## Skill memory (checkout only)
+
+`scripts/skill-memory.mjs` records lessons in a journal and folds recurring
+ones into the installed copy's managed section. It accepts only the seven
+shipped skill names and refuses paths outside the chosen skills dir.
+
+```bash
+node scripts/skill-memory.mjs record --skill awwwards-inspiration --phase verify \
+  --symptom "..." --rule "..."
+node scripts/skill-memory.mjs recall --skill awwwards-inspiration --dir ~/.claude/skills
+node scripts/skill-memory.mjs distill --dir ~/.claude/skills
+node scripts/skill-memory.mjs promote --skill awwwards-inspiration --dir ~/.claude/skills
+node scripts/skill-memory.mjs stats
+```
+
+- `--dir` (or `AWWWARDS_SKILLS_DIR`) names the installed skills dir. If
+  omitted, the helper picks the first existing of `~/.agents/skills`,
+  `~/.claude/skills`, `~/.zcode/skills`, `~/.pi/agent/skills`, preferring one
+  that already contains a shipped skill.
+- `AWWWARDS_SKILL_MEMORY_DIR` relocates the journal (default
+  `$AWWWARDS_CACHE_DIR/skill-memory`, else `~/.awwwards-mcp/skill-memory`).
+- Update installed copies with `npx skills update`, then re-run `distill`; the
+  journal is the source of truth and the managed section is rebuildable.
+- There is no `sync` command: the `skills` CLI owns installed copies.
+
+## Local validation
+
+No dependencies. Run from the repo root:
+
+```bash
+node scripts/validate-skills.mjs
+node --test scripts/skill-memory.test.mjs
+```
+
+`AWWWARDS_SKIP_NETWORK=1 node scripts/validate-skills.mjs` skips the network
+check. Otherwise the validator compares every local `v2-routing.md` with the
+raw fixture from `awwwards-mcp` tag `v1.17.1`; if the network is unavailable it
+prints a skip instead of failing.
 
 ## Scope and fair use
 

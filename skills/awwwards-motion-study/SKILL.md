@@ -73,12 +73,16 @@ Fast path first, fall back when it can't:
 
 1. **`record_site_motion`** (MCP tool): inline filmstrip + saved .webm path.
    Best default. Known ceiling: ~30 s — heavy sites may time out.
-2. **`scripts/record-scrollthrough.mjs`** (repo checkout, playwright):
-   `node scripts/record-scrollthrough.mjs <url> <outDir> <name>.webm` —
-   full-control recorder: 7 s preloader dwell, 450 px/600 ms stepped scroll,
+2. **`scripts/record-scrollthrough.mjs`** (awwwards-mcp source checkout,
+   playwright): run it from the root of that checkout
+   ([github.com/INSANE0777/Awwwards-mcp](https://github.com/INSANE0777/Awwwards-mcp),
+   which has playwright + ffmpeg-static as devDependencies) —
+   `node scripts/record-scrollthrough.mjs <url> <outDir> <name>.webm`.
+   Full-control recorder: 7 s preloader dwell, 450 px/600 ms stepped scroll,
    injected virtual cursor (playwright video doesn't render the real one)
    that visits and dwells on interactive elements. Use when the MCP tool
-   times out or when you need to customize the tour.
+   times out or when you need to customize the tour. The npm package does not
+   ship this script; installed/npx users fall back to path 1 or 3.
 3. **Direct playwright**: `chromium.launch()` + `newContext({ recordVideo })`
    when neither fits (custom viewports, login flows, multi-page tours).
 
@@ -94,8 +98,9 @@ Capture rules that prevent re-shoots:
   otherwise reveal-on-scroll sections record as blank boxes.
 - For multi-page sites, record **each page** you'll rebuild (home, projects,
   about), not just the hero.
-- On the 30 s MCP ceiling: fall back to the script; never shorten the scroll
-  so much that sections get skipped.
+- On the 30 s MCP ceiling: use the checkout script when you have it, otherwise
+  split the pass or use direct playwright; never shorten the scroll so much
+  that sections get skipped.
 
 ## 3. How to review the video
 
@@ -194,8 +199,9 @@ Verification is the same skill pointed at yourself:
 
 ## Close the flywheel
 
-In a repository checkout (the installed npm package does not ship this dev
-script), end every capture/study pass by recording what verification caught:
+In a checkout of the awwwards-skills repository (the installed skill copy does
+not include this dev script), end every capture/study pass by recording what
+verification caught:
 `node scripts/skill-memory.mjs record --skill awwwards-motion-study --phase motion-study --symptom "..." --rule "..." [--evidence tile.jpg]`. Distill folds rules seen ≥2× into your installed copy; recall prints them at the next study. The techniques registry (`_memory/techniques.json`) grows from promoted findings — propose better methods by recording them. For the human PR that promotes a rule into the shipped copy, `promote --skill awwwards-motion-study` strips machine-local evidence paths.
 
 ## Anti-patterns

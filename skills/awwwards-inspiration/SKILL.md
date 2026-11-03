@@ -202,7 +202,7 @@ once for searches across thousands of sites:
 
 ```bash
 npx -y -p awwwards-mcp awwwards-index      # from the published package
-npm run index                              # from a repo checkout
+npm run index                              # from the awwwards-mcp checkout root
 ```
 
 - Crawls all ~200 tag pages at 1 request/second (~4 minutes) into a SQLite
@@ -233,9 +233,11 @@ video file directly — if your model supports video input, watching the
 scroll-through gives you timing, easing, and transitions the frames can't.
 If the Read comes back with media omitted / "model does not support video
 input", extract the filmstrip and Read the frames instead. A ready-made
-recorder ships in this repo at
-`scripts/record-scrollthrough.mjs` (run it from the repo root; playwright
-and ffmpeg-static are devDependencies).
+recorder ships in the **awwwards-mcp source checkout**
+([github.com/INSANE0777/Awwwards-mcp](https://github.com/INSANE0777/Awwwards-mcp)),
+not this skills repo, at `scripts/record-scrollthrough.mjs` — run it from that
+checkout's root (playwright and ffmpeg-static are devDependencies there).
+Installed/npx users do not get the script; use `record_site_motion`.
 
 <!-- skill-memory:start -->
 <!-- skill-memory:end -->
