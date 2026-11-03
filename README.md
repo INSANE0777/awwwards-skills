@@ -168,11 +168,12 @@ Optional extras:
 
 Some skills mention scripts that live only in the
 [awwwards-mcp source repository](https://github.com/INSANE0777/Awwwards-mcp):
-`scripts/doctor.mjs`, `scripts/parser-drift-probe.mjs`,
-`scripts/record-scrollthrough.mjs`, and `scripts/skill-memory.mjs`. They are not
-part of this skills repository and are not shipped in the npm package. The
-skills label those steps **repo-checkout only**; everything else works with the
-installed or `npx` server.
+`scripts/doctor.mjs`, `scripts/parser-drift-probe.mjs` and
+`scripts/record-scrollthrough.mjs`. They are not part of this skills repository
+and are not shipped in the npm package. `scripts/skill-memory.mjs` now lives
+here; run it from a checkout of this repository. The skills label those steps
+**repo-checkout only**; everything else works with the installed or `npx`
+server.
 
 ## Scope and fair use
 
