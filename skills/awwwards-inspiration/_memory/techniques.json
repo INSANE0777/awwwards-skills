@@ -12,9 +12,10 @@
           "how": [
             "analyze_page_structure band map = build order; one giant band (5000px+) means collapsed sections - switch to explicit class/id selectors per real section",
             "capture_component per section in band order; selector ladder: class/id > role attr > tag names (real sites often lack <header>)",
-            "verify_build per band after each section builds - read ONLY that band's score; iterate until it passes; LOCK the section before starting the next",
+            "Gate each section against its capture: compare captured geometry (height, offsetTop, child boxes, columns), screenshots at the same viewport, tokens and section-scoped motion values; write explicit pass/fail checks; LOCK the section before starting the next",
+            "verify_build returns ONE aggregate band score (bands.score plus matched/refOnly/buildOnly labels), never a score per band - use it as whole-page evidence, not the per-section gate",
             "Shared WebGL/canvas across bands = page does not slice - capture_pose_3d for that region as ONE unit",
-            "Final whole-page verify_build = coherence pass (spacing rhythm, easing family, scroll continuity), fixed at token level not by re-opening locked sections"
+            "Final whole-page verify_build = aggregate evidence + coherence pass (spacing rhythm, easing family, scroll continuity), fixed at token level not by re-opening locked sections"
           ],
           "source": "Recreation-kit dogfooding 2026-10-17: estherwong.fun (header tag miss, 2-band map) + neutomni.com (20631px collapsed band, Webflow selector ladder)"
         },
@@ -78,10 +79,13 @@
           "when": "Micro-interactions: hover states that a screenshot cannot show. Captures the EXACT style delta instead of eyeballing film frames.",
           "how": [
             "For each interactive element (cursor:pointer discovery, as in record-scrollthrough.mjs):",
-            "  const rest = getComputedStyle(el); el.dispatchEvent(new MouseEvent('mouseover', {bubbles:true}));",
-            "  await new Promise(r => setTimeout(r, 700)); const hover = getComputedStyle(el);",
-            "  diff rest vs hover on: transform, opacity, color, background, box-shadow, letter-spacing, filter, clip-path",
-            "Record the diff per element — this IS the micro-interaction inventory"
+            "  const props = ['transform','opacity','color','backgroundColor','boxShadow','letterSpacing','filter','clipPath'];",
+            "  const snap = (el) => Object.fromEntries(props.map(p => [p, getComputedStyle(el).getPropertyValue(p)]));",
+            "  const rest = snap(el);  // copy values into a plain object; a live CSSStyleDeclaration reflects the later hover state",
+            "  const box = await el.boundingBox(); await page.mouse.move(box.x + box.width / 2, box.y + box.height / 2);  // real pointer: dispatchEvent('mouseover') does NOT trigger CSS :hover",
+            "  await page.waitForTimeout(700);  // let transitions settle",
+            "  const hover = snap(el); diff rest vs hover on the recorded props; move the pointer away and wait before the next element",
+            "Record the diff per element - this IS the micro-interaction inventory"
           ],
           "source": "record-scrollthrough.mjs virtual-cursor pattern (ours) + computed-style diffing standard practice"
         },
@@ -141,7 +145,8 @@
           "id": "overflow-audit",
           "when": "After any responsive build — horizontal overflow at any breakpoint is a structural bug.",
           "how": [
-            "For each viewport (desktop 1440, mobile 390): document.scrollWidth > window.innerWidth → report offending elements (walk tree for el.getBoundingClientRect().right > innerWidth)",
+            "For each viewport (desktop 1440, mobile 390): page overflow is document.documentElement.scrollWidth > window.innerWidth (Document has no scrollWidth; element.scrollWidth is not page overflow)",
+            "Offender: walk the tree for el.getBoundingClientRect().right > window.innerWidth || el.getBoundingClientRect().left < 0; for clipped inner content, el.scrollWidth > el.clientWidth",
             "Record the offender + the px — pin shots will show it as asymmetric whitespace"
           ],
           "source": "v1.3.0 mobile smoke lesson (fallow-press 43px overflow)"

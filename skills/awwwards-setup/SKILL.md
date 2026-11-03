@@ -121,9 +121,9 @@ defaults" is a valid answer:
    polite live scraping (~31 sites per page). The local index (~4 minutes,
    resumable, then background-refreshed automatically) buys searches across
    thousands of sites instantly:
-   `npx -y -p awwwards-mcp awwwards-index` (or `npm run index` in a repo
-   checkout). Offer it; if accepted, run it in the background and continue —
-   do not block onboarding. Store as `"autoIndex": true | false`.
+   `npx -y -p awwwards-mcp awwwards-index` (or `npm run index` in the
+   awwwards-mcp checkout). Offer it; if accepted, run it in the background and
+   continue — do not block onboarding. Store as `"autoIndex": true | false`.
 
 5. **Winner watches** — Do you want to track studios, tags or specific
    sites across sessions? If the user names any, register them

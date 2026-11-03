@@ -93,7 +93,9 @@ import it.
 
 Page-level first (loader → journey → cursor → audio → ruler), then sections
 that own independent triggers. Keep the same lock discipline as the section
-loop: author a section, verify its band, lock it, next.
+loop: author a section, re-run its section gate (captured geometry +
+screenshots + explicit checks), lock it, next. `verify_build` is aggregate
+whole-page evidence, not a per-section score.
 
 ## 6. Verification gate (all must pass)
 
