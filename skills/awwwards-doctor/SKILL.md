@@ -23,17 +23,13 @@ recover the user's task**. Never delete user data; the only destructive step
 > `audit_page {request:{kind:"images", url}}` instead. Full mapping:
 > [v2-routing.md](v2-routing.md).
 
-## 1. Run the doctor (repo checkout only)
+## 1. Run the doctor (repo checkout)
 
 ```bash
 npm run doctor             # diagnose only
 npm run doctor -- --fix    # diagnose AND apply available fixes
 npm run doctor -- --json   # machine-readable report
 ```
-
-These commands exist only in a clone of the awwwards-mcp source repository.
-This skills package ships no MCP scripts, so a skills-only install cannot run
-them — use section 3 for an npm-installed server.
 
 The doctor checks five things and knows how to fix the mechanical ones:
 
@@ -132,7 +128,7 @@ The user's build/research doesn't wait for the repair. Degrade gracefully:
 
 ## Close the flywheel
 
-Repairs are the highest-value lessons - they were expensive to learn. **Repo-checkout only** — neither the installed npm package nor this skills package ships this dev script. In a repository checkout, after a successful diagnosis + fix:
+Repairs are the highest-value lessons - they were expensive to learn. In a repository checkout (the installed npm package does not ship this dev script), after a successful diagnosis + fix:
 `node scripts/skill-memory.mjs record --skill awwwards-doctor --phase repair --symptom "..." --rule "..." [--evidence <report path>]`. Distill folds recurring failure signatures into this installed copy so the next repair starts knowing them. When a rule proves out, `promote --skill awwwards-doctor` outputs it cleaned (no machine-local evidence paths) for the shipped-copy PR.
 
 ## Anti-patterns

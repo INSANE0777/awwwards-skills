@@ -118,7 +118,7 @@ Run this loop before building anything visual:
    is a structural bug no amount of pixel polish fixes. Match the reference's
    band structure, never just its total height.
 
-9. **Close the flywheel (repo-checkout only — neither the installed npm package nor this skills package ships this dev script):** in a repository checkout, end every loop pass by recording what the verification caught - `node scripts/skill-memory.mjs record --skill awwwards-inspiration --phase <phase> --symptom "..." --rule "..." [--evidence path]`. "Nothing new learned" is a recorded negative. Then `distill` folds rules seen ≥2× into your installed copy's managed section; `recall` prints them at loop start. When promoting a confirmed rule into the shipped copy (human PR), `promote --skill awwwards-inspiration` prints it with machine-local evidence paths stripped.
+9. **Close the flywheel:** in a repository checkout (the installed npm package does not ship this dev script), end every loop pass by recording what the verification caught - `node scripts/skill-memory.mjs record --skill awwwards-inspiration --phase <phase> --symptom "..." --rule "..." [--evidence path]`. "Nothing new learned" is a recorded negative. Then `distill` folds rules seen ≥2× into your installed copy's managed section; `recall` prints them at loop start. When promoting a confirmed rule into the shipped copy (human PR), `promote --skill awwwards-inspiration` prints it with machine-local evidence paths stripped.
 
 ## Award discovery
 
@@ -233,10 +233,9 @@ video file directly — if your model supports video input, watching the
 scroll-through gives you timing, easing, and transitions the frames can't.
 If the Read comes back with media omitted / "model does not support video
 input", extract the filmstrip and Read the frames instead. A ready-made
-recorder ships only in the awwwards-mcp source checkout at
-`scripts/record-scrollthrough.mjs` (repo-checkout only — not shipped with this
-skills package; run it from the repo root; playwright and ffmpeg-static are
-devDependencies).
+recorder ships in this repo at
+`scripts/record-scrollthrough.mjs` (run it from the repo root; playwright
+and ffmpeg-static are devDependencies).
 
 <!-- skill-memory:start -->
 <!-- skill-memory:end -->

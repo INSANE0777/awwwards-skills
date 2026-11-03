@@ -73,8 +73,7 @@ Fast path first, fall back when it can't:
 
 1. **`record_site_motion`** (MCP tool): inline filmstrip + saved .webm path.
    Best default. Known ceiling: ~30 s — heavy sites may time out.
-2. **`scripts/record-scrollthrough.mjs`** (repo-checkout only — not shipped
-   with this skills package; playwright):
+2. **`scripts/record-scrollthrough.mjs`** (repo checkout, playwright):
    `node scripts/record-scrollthrough.mjs <url> <outDir> <name>.webm` —
    full-control recorder: 7 s preloader dwell, 450 px/600 ms stepped scroll,
    injected virtual cursor (playwright video doesn't render the real one)
@@ -195,9 +194,8 @@ Verification is the same skill pointed at yourself:
 
 ## Close the flywheel
 
-**Repo-checkout only** — neither the installed npm package nor this skills
-package ships this dev script. In a repository checkout, end every
-capture/study pass by recording what verification caught:
+In a repository checkout (the installed npm package does not ship this dev
+script), end every capture/study pass by recording what verification caught:
 `node scripts/skill-memory.mjs record --skill awwwards-motion-study --phase motion-study --symptom "..." --rule "..." [--evidence tile.jpg]`. Distill folds rules seen ≥2× into your installed copy; recall prints them at the next study. The techniques registry (`_memory/techniques.json`) grows from promoted findings — propose better methods by recording them. For the human PR that promotes a rule into the shipped copy, `promote --skill awwwards-motion-study` strips machine-local evidence paths.
 
 ## Anti-patterns
@@ -245,13 +243,15 @@ at. Run them BEFORE recording - then record only what they can't express:
   easing tokens, duration quartiles. Feeds a rebuild's type scale directly.
 - `capture_pose_3d` - WebGL/canvas heroes, which screen recording captures
   worst (flat pixels of a 3D scene). Pose grids + `build_pose_stub` give the
-  frames plus a synthesized camera path (guidance, not recovered camera data).
+  frames plus a synthesized camera path (guidance, not recovered camera data);
+  the stub dedupes same-index frame loads and discards stale decodes.
 - `capture_scene_3d` with `adapters:["three"]` - for Three.js heroes: reads
   only reachable globals into `evidence.three` (nodes/cameras/lights/controls);
   `build_scene_stub` rebuilds only supported primitives and a perspective camera
   from its exact matrix. Controls are never recreated and stay unresolved.
   Module-local scenes, parent transforms and unbound textures are not recovered;
-  captured lights are recorded, not applied.
+  captured lights are recorded, not applied. `scene.json` frame references are
+  basenames extracted from either Windows or POSIX paths.
 - `capture_scene_3d` with `adapters:["spector"]` - optional `spectorjs@0.9.33`
   for shader evidence: one WebGL frame with command names/counts, statuses,
   context attributes and capped shader source. Arguments, results, state, stack
@@ -281,7 +281,10 @@ counts and the worst anti-pattern, e.g. `anti-patterns: 23 (worst: blur-heavy)`)
 instead of eyeballing — for a canvas hero, opt in with `scene3d` after
 `capture_scene_3d`: it compares one rendered frame per checkpoint in a
 separate gate, rejects unstable reference frames, and can read time-shifted
-animation as outside tolerance —
+animation as outside tolerance. It preflights both URLs before the legacy
+scans (private/loopback is refused with zero requests), refuses duplicate or
+pre-marked canvas decoys through a per-run marker, and budgets the run from the
+replayed checkpoint waits + 10 s headroom (floor 15 s, cap 45 s) —
 and turn the motion inventory into starting code with `build_gsap_stub`
 (feed it the scroll census + optional pose grid; it emits a runnable
 GSAP+ScrollTrigger stub with the captured durations, easings, scrub/pin, a
