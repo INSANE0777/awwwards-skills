@@ -21,6 +21,9 @@ jobs:
       - name: Validate structure, links, LICENSE, JSON and routing
         run: node scripts/validate-skills.mjs
 
+      - name: Install PyYAML for the DESIGN.md validator
+        run: python3 -m pip install --quiet pyyaml
+
       - name: Test skill-memory
         run: node --test scripts/skill-memory.test.mjs
 
@@ -30,4 +33,4 @@ jobs:
           DO_NOT_TRACK: "1"
         run: |
           npx -y skills@1.7.6 add . --all --copy
-          node -e "const fs=require('fs'),p=require('path'),dir='.agents/skills';const want=['awwwards-setup','awwwards-inspiration','recreate','awwwards-motion-study','awwwards-section-loop','motion-authoring','awwwards-doctor'];const got=fs.readdirSync(dir).filter(n=>fs.statSync(p.join(dir,n)).isDirectory()&&!n.startsWith('.'));if(got.length!==7||want.some(n=>!got.includes(n))){console.error('expected 7 skill dirs in '+dir+', got: '+got.join(', '));process.exit(1);}console.log('installed 7 skills: '+got.join(', '));"
+          node -e "const fs=require('fs'),p=require('path'),dir='.agents/skills';const want=['awwwards-setup','awwwards-inspiration','recreate','awwwards-motion-study','awwwards-section-loop','motion-authoring','awwwards-doctor','awwwards-design-md'];const got=fs.readdirSync(dir).filter(n=>fs.statSync(p.join(dir,n)).isDirectory()&&!n.startsWith('.'));if(got.length!==8||want.some(n=>!got.includes(n))){console.error('expected 8 skill dirs in '+dir+', got: '+got.join(', '));process.exit(1);}console.log('installed 8 skills: '+got.join(', '));"

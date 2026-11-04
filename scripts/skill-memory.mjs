@@ -58,8 +58,9 @@ const SKILLS = [
   "awwwards-section-loop",
   "motion-authoring",
   "awwwards-doctor",
+  "awwwards-design-md",
 ];
-const PHASES = ["search", "capture", "motion-study", "build", "verify", "release", "repair"];
+const PHASES = ["search", "capture", "motion-study", "design-doc", "build", "verify", "release", "repair"];
 const MARK_START = "<!-- skill-memory:start -->";
 const MARK_END = "<!-- skill-memory:end -->";
 

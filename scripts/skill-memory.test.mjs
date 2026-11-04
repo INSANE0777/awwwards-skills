@@ -28,7 +28,7 @@ function writeSkill(dir, name, body) {
   writeFileSync(join(dir, name, "SKILL.md"), body);
 }
 
-test("rejects a --skill that is not one of the seven shipped names (no traversal)", () => {
+test("rejects a --skill that is not one of the eight shipped names (no traversal)", () => {
   const skillsDir = join(tmp, "traversal-skills");
   mkdirSync(skillsDir, { recursive: true });
 
