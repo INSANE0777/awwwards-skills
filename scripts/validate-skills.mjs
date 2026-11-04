@@ -2,12 +2,12 @@
 // Structural validation for the shipped skills. No dependencies.
 //
 // Checks:
-//   - exactly the seven shipped skill dirs, each with matching frontmatter
+//   - exactly the eight shipped skill dirs, each with matching frontmatter
 //     `name` + a non-empty `description`
 //   - every relative markdown link resolves inside its skill dir
 //   - every skill dir carries LICENSE, byte-identical to the root LICENSE
 //   - every .json under skills/ parses; the two techniques.json copies are equal
-//   - all seven v2-routing.md copies are byte-identical
+//   - all eight v2-routing.md copies are byte-identical
 //   - when the network is available, those copies equal the raw MCP v1.17.1
 //     fixture (set AWWWARDS_SKIP_NETWORK=1 to skip that one check)
 
@@ -25,6 +25,7 @@ const SKILLS = [
   "awwwards-section-loop",
   "motion-authoring",
   "awwwards-doctor",
+  "awwwards-design-md",
 ];
 const ROUTING_FIXTURE =
   "https://raw.githubusercontent.com/INSANE0777/Awwwards-mcp/v1.17.1/test/fixtures/v2-routing.md";

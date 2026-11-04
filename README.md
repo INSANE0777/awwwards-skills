@@ -1,6 +1,6 @@
 # Awwwards MCP Agent Skills
 
-Seven agent skills for building, studying, and repairing websites with
+Eight agent skills for building, studying, documenting, and repairing websites with
 [`awwwards-mcp`](https://github.com/INSANE0777/Awwwards-mcp) — a free MCP server
 that searches award-winning sites, captures live pages, and measures motion and
 structure.
@@ -9,7 +9,12 @@ These skills are workflow instructions, not a standalone tool. They teach an
 agent the order to call the MCP tools in, what evidence to collect, what to
 ignore, and how to verify a build against a real reference.
 
-Tested with `awwwards-mcp` **1.17.1** and the `skills` CLI **1.7.6**.
+Tested with `awwwards-mcp` **1.17.1** for the original seven skills and
+**1.18.0** for `awwwards-design-md` once that release is published. The
+`awwwards-design-md` skill requires the `publicOnly` capture contract added in
+1.18.0; do not run it against older servers.
+
+The `skills` CLI version tested is **1.7.6**.
 
 ## Requirements
 
@@ -133,7 +138,8 @@ that use it — `_memory/techniques.json`. If you install by hand, copy the whol
 | **awwwards-motion-study** | The reference has animation and you need the full capture → frame review → motion inventory → build → re-record loop, including what to record and what to skip. |
 | **awwwards-section-loop** | You are rebuilding a multi-section page: plan from the band map, build one section, verify its band, lock it, and move on without compounding drift. |
 | **motion-authoring** | You converted a project with `--authored` and must turn `motion.manifest.json` plus inert skeletons into real per-section/page motion with parity proof. |
-| **awwwards-doctor** | The MCP is blocked, parsers drifted, captures fail, searches are empty, or the cache is stale — diagnose, fix what is mechanical, and recover the user's in-flight task. |
+| **awwwards-doctor** | The MCP is blocked, parsers drifted, captures fail, searches are empty, or the cache is stale - diagnose, fix what is mechanical, and recover the user's in-flight task. |
+| **awwwards-design-md** | You need a cited DESIGN.md plus evidence sidecar for one public URL, using observed tokens, structure, screenshot, and up to three components - not an official brand system or recovered source tokens. |
 
 ## MCP profiles
 
@@ -206,7 +212,7 @@ kept. The exact commands are in `skills/awwwards-doctor/SKILL.md`, section 3.
 ## Skill memory (checkout only)
 
 `scripts/skill-memory.mjs` records lessons in a journal and folds recurring
-ones into the installed copy's managed section. It accepts only the seven
+ones into the installed copy's managed section. It accepts only the eight
 shipped skill names and refuses paths outside the chosen skills dir.
 
 ```bash
