@@ -29,7 +29,11 @@ choice is re-asked.
 > `capture_page {request:{kind:"recording", url}}`,
 > `inspect_page {request:{kind:"tokens", url}}`,
 > `audit_page {request:{kind:"images", url}}` and
-> `audit_page {request:{kind:"bundle", url}}`. Full mapping:
+> `audit_page {request:{kind:"bundle", url}}`.
+> With `AWWWARDS_MCP_ATLAS=1`, the full profile adds `search_atlas`,
+> `get_atlas`, `capture_atlas` and `export_evidence_pack`, and v2 adds
+> `export_evidence_pack` plus Atlas branches. See the `awwwards-atlas` skill.
+> Full mapping:
 > [v2-routing.md](v2-routing.md).
 
 ## 0. Check for existing preferences
@@ -68,12 +72,16 @@ collected now and persisted so the restarted session lands running.
 Optional env additions: `AWWWARDS_CACHE_DIR` (custom cache location),
 `AWWWARDS_AUTO_UPDATE=1` (background self-update on new releases),
 `AWWWARDS_MCP_PROFILE=core|full|v2` (`core` registers only the 13
-build-loop tools, including `get_annual_categories`; `full` exposes all 41;
+build-loop tools, including `get_annual_categories`; `full` exposes all 41
+(45 with `AWWWARDS_MCP_ATLAS=1`);
 `v2` registers 10 consolidated tools plus 5 retained tools with their existing
 names and flat inputs (create_design_brief, build_project, verify_build,
-verify_flow, analyze_network_capture); only the 34 replaced 1.x names
+verify_flow, analyze_network_capture), 16 with Atlas; only the 34 replaced 1.x
+names
 disappear; default full;
-changing it requires a server restart). The old → new v2 mapping lives in
+changing it requires a server restart). `AWWWARDS_MCP_ATLAS=1` is a separate
+opt-in flag for the experimental Atlas tools and CLI; it does not change
+`core`; see the `awwwards-atlas` skill. The old → new v2 mapping lives in
 [v2-routing.md](v2-routing.md) — do not mix 1.x names into a v2 session.
 `AWWWARDS_MCP_MAX_RESPONSE_BYTES` (default 32 MB; oversized results become a truncation JSON),
 `AWWWARDS_MCP_DEBUG_MEMORY=1` (one stderr metrics line per tool call), and

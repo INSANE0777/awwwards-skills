@@ -1,6 +1,6 @@
 # Awwwards MCP Agent Skills
 
-Eight agent skills for building, studying, documenting, and repairing websites with
+Nine agent skills for building, studying, documenting, and repairing websites with
 [`awwwards-mcp`](https://github.com/INSANE0777/Awwwards-mcp) — a free MCP server
 that searches award-winning sites, captures live pages, and measures motion and
 structure.
@@ -9,10 +9,10 @@ These skills are workflow instructions, not a standalone tool. They teach an
 agent the order to call the MCP tools in, what evidence to collect, what to
 ignore, and how to verify a build against a real reference.
 
-Tested with `awwwards-mcp` **1.17.1** for the original seven skills and
-**1.18.0** for `awwwards-design-md` once that release is published. The
+Tested with `awwwards-mcp` **1.19.0**. The
 `awwwards-design-md` skill requires the `publicOnly` capture contract added in
-1.18.0; do not run it against older servers.
+1.18.0; the `awwwards-atlas` skill requires the Atlas tools added in 1.19.0.
+Do not run either against older servers.
 
 The `skills` CLI version tested is **1.7.6**.
 
@@ -85,7 +85,7 @@ Pin both the CLI and a release tag for a reproducible install (use the newest
 `skills-v*` tag):
 
 ```bash
-npx skills@1.7.6 add INSANE0777/awwwards-skills@skills-v2026.11.05
+npx skills@1.7.6 add INSANE0777/awwwards-skills@skills-v2026.11.11
 ```
 
 Or follow the default branch:
@@ -140,6 +140,7 @@ that use it — `_memory/techniques.json`. If you install by hand, copy the whol
 | **motion-authoring** | You converted a project with `--authored` and must turn `motion.manifest.json` plus inert skeletons into real per-section/page motion with parity proof. |
 | **awwwards-doctor** | The MCP is blocked, parsers drifted, captures fail, searches are empty, or the cache is stale - diagnose, fix what is mechanical, and recover the user's in-flight task. |
 | **awwwards-design-md** | You need a cited DESIGN.md plus evidence sidecar for one public URL, using observed tokens, structure, screenshot, and up to three components - not an official brand system or recovered source tokens. |
+| **awwwards-atlas** | You need the experimental Atlas section/component evidence layer: enable `AWWWARDS_MCP_ATLAS=1`, import or capture local evidence, search regions, inspect status, export an evidence pack, or maintain the Atlas cache. Atlas is opt-in; section labels and inferred component types are candidate-only. |
 
 ## MCP profiles
 
@@ -148,9 +149,9 @@ The server reads `AWWWARDS_MCP_PROFILE` once at startup. Set it in the server
 
 | Profile | Tools | Surface |
 |---|---|---|
-| `full` (default) | 41 | Every 1.x tool. Examples in the skills use these names. |
-| `core` | 13 | Build-loop subset, including `get_annual_categories`. |
-| `v2` | 15 | 10 consolidated tools plus 5 retained flat tools. |
+| `full` (default) | 41 (45 with Atlas) | Every 1.x tool. Examples in the skills use these names. `AWWWARDS_MCP_ATLAS=1` adds the four experimental Atlas tools. |
+| `core` | 13 | Build-loop subset, including `get_annual_categories`. Atlas does not change it. |
+| `v2` | 15 (16 with Atlas) | 10 consolidated tools plus 5 retained flat tools. Atlas adds `export_evidence_pack` and branches on existing tools. |
 
 Every skill links to its own copy of `v2-routing.md`, which maps each 1.x call to
 the v2 request object. In a `v2` session, a 1.x tool name is a routing error, not
@@ -212,7 +213,7 @@ kept. The exact commands are in `skills/awwwards-doctor/SKILL.md`, section 3.
 ## Skill memory (checkout only)
 
 `scripts/skill-memory.mjs` records lessons in a journal and folds recurring
-ones into the installed copy's managed section. It accepts only the eight
+ones into the installed copy's managed section. It accepts only the nine
 shipped skill names and refuses paths outside the chosen skills dir.
 
 ```bash
@@ -245,7 +246,7 @@ node --test scripts/skill-memory.test.mjs
 
 `AWWWARDS_SKIP_NETWORK=1 node scripts/validate-skills.mjs` skips the network
 check. Otherwise the validator compares every local `v2-routing.md` with the
-raw fixture from `awwwards-mcp` tag `v1.17.1`; if the network is unavailable it
+raw fixture from `awwwards-mcp` tag `v1.19.0`; if the network is unavailable it
 prints a skip instead of failing.
 
 ## Scope and fair use
