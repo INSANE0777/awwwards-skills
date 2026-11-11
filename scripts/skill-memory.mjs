@@ -59,6 +59,7 @@ const SKILLS = [
   "motion-authoring",
   "awwwards-doctor",
   "awwwards-design-md",
+  "awwwards-atlas",
 ];
 const PHASES = ["search", "capture", "motion-study", "design-doc", "build", "verify", "release", "repair"];
 const MARK_START = "<!-- skill-memory:start -->";
