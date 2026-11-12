@@ -284,13 +284,17 @@ a redundancy. When the study feeds a rebuild, close the loop with
 `verify_build` (motion fingerprint + band compare + measured perf and
 anti-pattern evidence — expect ~2 min; the evidence line names dropped-frame
 counts and the worst anti-pattern, e.g. `anti-patterns: 23 (worst: blur-heavy)`)
-instead of eyeballing — for a canvas hero, opt in with `scene3d` after
+instead of eyeballing - for a canvas hero, opt in with `scene3d` after
 `capture_scene_3d`: it compares one rendered frame per checkpoint in a
 separate gate, rejects unstable reference frames, and can read time-shifted
-animation as outside tolerance. It preflights both URLs before the legacy
+animation as outside tolerance. The gate is **stable from `awwwards-mcp`
+1.20.0** and opt-in (experimental on 1.19.x); it compares cropped canvas pixels
+only, needs both tolerances for a verdict, and does not infer camera, geometry
+or shaders, compare across viewports or image sizes, issue a partial pass, or
+reconstruct the scene. It preflights both URLs before the legacy
 scans (private/loopback is refused with zero requests), refuses duplicate or
 pre-marked canvas decoys through a per-run marker, and budgets the run from the
-replayed checkpoint waits + 10 s headroom (floor 15 s, cap 45 s) —
+replayed checkpoint waits + 10 s headroom (floor 15 s, cap 45 s) -
 and turn the motion inventory into starting code with `build_gsap_stub`
 (feed it the scroll census + optional pose grid; it emits a runnable
 GSAP+ScrollTrigger stub with the captured durations, easings, scrub/pin, a

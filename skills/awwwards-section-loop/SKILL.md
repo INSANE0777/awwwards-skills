@@ -199,15 +199,18 @@ re-run its section gate, lock, next. Whole-page desktop + 390 mobile parity last
   gate: one whole-page band score (`bands.score` + `matched`/`refOnly`/
   `buildOnly` labels) and a motion score, plus measured perf (fps, dropped
   frames, long tasks) and anti-pattern counts from instrumented live probes.
-  Runs a real browser — expect ~2 min per call. For a shared WebGL canvas,
+  Runs a real browser - expect ~2 min per call. For a shared WebGL canvas,
   opt-in `scene3d` replays a
   `capture_scene_3d` pack on the build canvas as a separate gate with its own
-  status/verdict; it never upgrades the legacy band pass, unstable capture
-  frames are rejected, and its build URL must resolve publicly (loopback is
-  refused). It preflights both URLs before the legacy scans and makes zero
-  requests when either is private; the deadline is the replayed checkpoint
-  waits + 10 s headroom (floor 15 s, cap 45 s), and the canvas gets a per-run
-  marker so duplicate or pre-marked decoys are refused.
+  status/verdict; the gate is **stable from `awwwards-mcp` 1.20.0** and
+  experimental on 1.19.x. It never upgrades the legacy band pass, unstable
+  capture frames are rejected, and its build URL must resolve publicly (loopback
+  is refused). It compares cropped canvas pixels only and does not infer
+  camera, geometry or shaders, compare across viewports or image sizes, issue a
+  partial pass, or reconstruct the scene. It preflights both URLs before the
+  legacy scans and makes zero requests when either is private; the deadline is
+  the replayed checkpoint waits + 10 s headroom (floor 15 s, cap 45 s), and the
+  canvas gets a per-run marker so duplicate or pre-marked decoys are refused.
 - `audit_url compact:true` — quick perf and anti-pattern checks when you only
   need the summary, not the full evidence.
 - `capture_pose_3d` - canvas frames + synthesized camera guidance for

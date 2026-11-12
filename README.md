@@ -10,6 +10,9 @@ agent the order to call the MCP tools in, what evidence to collect, what to
 ignore, and how to verify a build against a real reference.
 
 Tested with `awwwards-mcp` **1.19.0**. The
+[compatibility notes](#compatibility) below name the first version each skill
+needs; the `scene3d` stability notes in `recreate`, `awwwards-motion-study` and
+`awwwards-section-loop` target **1.20.0** (on 1.19.x the gate is experimental).
 `awwwards-design-md` skill requires the `publicOnly` capture contract added in
 1.18.0; the `awwwards-atlas` skill requires the Atlas tools added in 1.19.0.
 Do not run either against older servers.
