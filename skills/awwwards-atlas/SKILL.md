@@ -9,7 +9,7 @@ Atlas is a local, section-level evidence layer over the same SQLite cache used
 by awwwards-mcp. It stores captures, regions, component summaries, claims,
 states and artifacts, then lets you search and export them.
 
-It is **experimental and opt-in in 1.19.x**:
+It is **experimental and opt-in in 1.19.x and 1.20.x**:
 
 - off by default
 - requires `AWWWARDS_MCP_ATLAS=1` at server start

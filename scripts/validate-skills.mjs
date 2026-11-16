@@ -8,7 +8,7 @@
 //   - every skill dir carries LICENSE, byte-identical to the root LICENSE
 //   - every .json under skills/ parses; the two techniques.json copies are equal
 //   - all nine v2-routing.md copies are byte-identical
-//   - when the network is available, those copies equal the raw MCP v1.19.0
+//   - when the network is available, those copies equal the raw MCP v1.20.0
 //     fixture (set AWWWARDS_SKIP_NETWORK=1 to skip that one check)
 
 import { existsSync, readFileSync, readdirSync, statSync } from "node:fs";
@@ -29,7 +29,7 @@ const SKILLS = [
   "awwwards-atlas",
 ];
 const ROUTING_FIXTURE =
-  "https://raw.githubusercontent.com/INSANE0777/Awwwards-mcp/v1.19.0/test/fixtures/v2-routing.md";
+  "https://raw.githubusercontent.com/INSANE0777/Awwwards-mcp/v1.20.0/test/fixtures/v2-routing.md";
 
 const failures = [];
 const fail = (msg) => {
@@ -155,29 +155,29 @@ if (routingSame) ok(`${routingFiles.length} v2-routing.md copies are byte-identi
 
 async function checkRemoteFixture() {
   if (process.env.AWWWARDS_SKIP_NETWORK === "1") {
-    console.log("skip raw MCP v1.19.0 routing fixture (AWWWARDS_SKIP_NETWORK=1)");
+    console.log("skip raw MCP v1.20.0 routing fixture (AWWWARDS_SKIP_NETWORK=1)");
     return;
   }
   let remote;
   try {
     const res = await fetch(ROUTING_FIXTURE, { signal: AbortSignal.timeout(10_000) });
     if (!res.ok) {
-      console.warn(`skip raw MCP v1.19.0 routing fixture (HTTP ${res.status})`);
+      console.warn(`skip raw MCP v1.20.0 routing fixture (HTTP ${res.status})`);
       return;
     }
     remote = Buffer.from(await res.arrayBuffer());
   } catch (err) {
-    console.warn(`skip raw MCP v1.19.0 routing fixture (network: ${err.message})`);
+    console.warn(`skip raw MCP v1.20.0 routing fixture (network: ${err.message})`);
     return;
   }
   // Compare content, not checkout line endings.
   const canonical = (buf) => buf.toString("utf8").replace(/\r\n/g, "\n");
   for (const file of routingFiles) {
     if (canonical(readFileSync(file)) !== canonical(remote)) {
-      fail(`${relative(root, file)} differs from the raw MCP v1.19.0 fixture`);
+      fail(`${relative(root, file)} differs from the raw MCP v1.20.0 fixture`);
     }
   }
-  ok(`v2-routing.md matches the raw MCP v1.19.0 fixture`);
+  ok(`v2-routing.md matches the raw MCP v1.20.0 fixture`);
 }
 
 await checkRemoteFixture();
