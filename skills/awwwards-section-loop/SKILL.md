@@ -207,7 +207,8 @@ re-run its section gate, lock, next. Whole-page desktop + 390 mobile parity last
   capture frames are rejected, and its build URL must resolve publicly (loopback
   is refused). It compares cropped canvas pixels only and does not infer
   camera, geometry or shaders, compare across viewports or image sizes, issue a
-  partial pass, or reconstruct the scene. It preflights both URLs before the
+  partial pass, or reconstruct the scene. The Three.js and Spector capture
+  adapters remain experimental. It preflights both URLs before the
   legacy scans and makes zero requests when either is private; the deadline is
   the replayed checkpoint waits + 10 s headroom (floor 15 s, cap 45 s), and the
   canvas gets a per-run marker so duplicate or pre-marked decoys are refused.

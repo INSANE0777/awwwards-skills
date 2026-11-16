@@ -291,7 +291,8 @@ animation as outside tolerance. The gate is **stable from `awwwards-mcp`
 1.20.0** and opt-in (experimental on 1.19.x); it compares cropped canvas pixels
 only, needs both tolerances for a verdict, and does not infer camera, geometry
 or shaders, compare across viewports or image sizes, issue a partial pass, or
-reconstruct the scene. It preflights both URLs before the legacy
+reconstruct the scene. The Three.js and Spector capture adapters remain
+experimental. It preflights both URLs before the legacy
 scans (private/loopback is refused with zero requests), refuses duplicate or
 pre-marked canvas decoys through a per-run marker, and budgets the run from the
 replayed checkpoint waits + 10 s headroom (floor 15 s, cap 45 s) -
