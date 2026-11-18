@@ -9,7 +9,7 @@ Atlas is a local, section-level evidence layer over the same SQLite cache used
 by awwwards-mcp. It stores captures, regions, component summaries, claims,
 states and artifacts, then lets you search and export them.
 
-It is **experimental and opt-in in 1.19.x and 1.20.x**:
+It is **experimental and opt-in in 1.19.x through 1.21.x**:
 
 - off by default
 - requires `AWWWARDS_MCP_ATLAS=1` at server start
@@ -192,6 +192,14 @@ Publication semantics:
   `CAPTURE_TIMEOUT`, `CAPTURE_DEADLINE_EXCEEDED` and `TARGET_CHANGED`.
 - A second concurrent capture returns retryable `CAPTURE_BUSY`; there is no
   queue. The capture budget is 90 seconds, the lease TTL 150 seconds.
+- 1.21 marks a fresh section nonvisual only when an ancestor proves it cannot
+  paint (hidden or zero-opacity chain, empty clip, overflow clipped to zero
+  area). A normal below-fold section stays eligible. A rejected nonvisual
+  section can make the capture `partial` with `SECTION_EXCLUDED`.
+- A page whose visible sections all sit under fixed ancestors has no
+  document-flow region: the capture ends in `NO_SECTION_REGIONS` with component
+  evidence and `published: false`. Use a document-flow page; do not add a
+  fixed-only workaround, and do not report such a capture as published.
 
 Capture limits:
 
