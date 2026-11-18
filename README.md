@@ -97,7 +97,7 @@ Pin both the CLI and a release tag for a reproducible install (use the newest
 `skills-v*` tag):
 
 ```bash
-npx skills@1.7.6 add INSANE0777/awwwards-skills@skills-v2026.11.11
+npx skills@1.7.6 add INSANE0777/awwwards-skills@skills-v2026.11.19
 ```
 
 Or follow the default branch:
