@@ -9,20 +9,22 @@ These skills are workflow instructions, not a standalone tool. They teach an
 agent the order to call the MCP tools in, what evidence to collect, what to
 ignore, and how to verify a build against a real reference.
 
-Tested with `awwwards-mcp` **1.20.0**. The
+Tested with `awwwards-mcp` **1.21.0**. The
 [compatibility notes](#compatibility) below name the first version each skill
 needs; the `scene3d` stability notes in `recreate`, `awwwards-motion-study` and
-`awwwards-section-loop` target **1.20.0** (on 1.19.x the gate is experimental).
+`awwwards-section-loop` target **1.20.0+** (on 1.19.x the gate is experimental).
 `verify_build`'s `scene3d` gate is stable from 1.20.0 and still opt-in; the
 Three.js and Spector capture adapters remain experimental.
 `awwwards-design-md` skill requires the `publicOnly` capture contract added in
 1.18.0; the `awwwards-atlas` skill requires the Atlas tools added in 1.19.0
 (experimental, `AWWWARDS_MCP_ATLAS=1`). Do not run either against older
-servers.
+servers. The 1.21 notes cover `scrollMode`/`virtualRoot`/`note` on
+`analyze_page_structure`, document-attribute preservation in converted builds,
+and Atlas sections proven nonvisual.
 
-The next skills release tag is **`skills-v2026.11.16`**, pairing these notes
-with `awwwards-mcp` 1.20.0; `skills-v2026.11.11` is the previous tag and still
-carries the 1.19-era `scene3d` wording.
+The next skills release tag is **`skills-v2026.11.19`**, pairing these notes
+with `awwwards-mcp` 1.21.0; `skills-v2026.11.16` is the previous tag and still
+carries the 1.20-era wording.
 
 The `skills` CLI version tested is **1.7.6**.
 
@@ -256,7 +258,7 @@ node --test scripts/skill-memory.test.mjs
 
 `AWWWARDS_SKIP_NETWORK=1 node scripts/validate-skills.mjs` skips the network
 check. Otherwise the validator compares every local `v2-routing.md` with the
-raw fixture from `awwwards-mcp` tag `v1.20.0`; if the network is unavailable it
+raw fixture from `awwwards-mcp` tag `v1.21.0`; if the network is unavailable it
 prints a skip instead of failing.
 
 ## Scope and fair use

@@ -50,7 +50,12 @@ FINALLY       whole-page verify_build             → aggregate + coherence pass
 marker libs. A Webflow or WordPress source means conventions you re-skin;
 a Next source means you can mirror component shapes. Then
 `analyze_page_structure` returns ordered bands with `top`, `height`,
-`bg`, and a text sniff. Treat the band list as the build order:
+`bg`, and a text sniff. `scrollMode` is always present (`document`,
+`element`, `virtual` or `canvas`); `virtualRoot` appears only for a
+transform-virtual wrapper and `note` only for a canvas-dominant page. A
+virtual wrapper's bands are its content, not a normal document scroll, and a
+canvas page's DOM bands cannot describe the canvas; treat those as one unit
+rather than slicing by band. Otherwise, treat the band list as the build order:
 
 - **Small count, sane heights** (≤ ~3,000 px each) → bands map 1:1 to
   build sections.
