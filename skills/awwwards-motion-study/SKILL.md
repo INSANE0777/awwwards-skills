@@ -263,6 +263,11 @@ at. Run them BEFORE recording - then record only what they can't express:
   context attributes and capped shader source. Arguments, results, state, stack
   and raw capture are not transferred; a page that stopped drawing can yield no
   programs.
+- `capture_scene_3d` `emit:"dossier"` - the rebuild dossier: 2-24
+  `samplePoints`, a conservative R1-R4 class, per-stop camera/transform
+  evidence, frame hashes, metadata-only assets and bounded shader refs. Use it
+  for a bounded Three.js rebuild, not for motion reconstruction: WebGPU,
+  workers/OffscreenCanvas, physics, audio and WebXR are out of scope.
 - `analyze_bundle` - bundle forensics when the evidence can't name a
   mechanism: fetches the site's script chunks (≤40, 1 req/s, saved locally),
   greps your keywords, optionally de-obfuscates with webcrack if installed.
@@ -287,7 +292,9 @@ counts and the worst anti-pattern, e.g. `anti-patterns: 23 (worst: blur-heavy)`)
 instead of eyeballing - for a canvas hero, opt in with `scene3d` after
 `capture_scene_3d`: it compares one rendered frame per checkpoint in a
 separate gate, rejects unstable reference frames, and can read time-shifted
-animation as outside tolerance. The gate is **stable from `awwwards-mcp`
+animation as outside tolerance. A `scene-evidence-v2` dossier is accepted and
+replays its 2-24 stops 1:1; keyframes are parity-checked metadata, not
+recovered camera animation. The gate is **stable from `awwwards-mcp`
 1.20.0** and opt-in (experimental on 1.19.x); it compares cropped canvas pixels
 only, needs both tolerances for a verdict, and does not infer camera, geometry
 or shaders, compare across viewports or image sizes, issue a partial pass, or
