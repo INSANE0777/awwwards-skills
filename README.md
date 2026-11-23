@@ -9,7 +9,7 @@ These skills are workflow instructions, not a standalone tool. They teach an
 agent the order to call the MCP tools in, what evidence to collect, what to
 ignore, and how to verify a build against a real reference.
 
-Tested with `awwwards-mcp` **1.21.0**. The
+Tested with `awwwards-mcp` **1.22.0**. The
 [compatibility notes](#compatibility) below name the first version each skill
 needs; the `scene3d` stability notes in `recreate`, `awwwards-motion-study` and
 `awwwards-section-loop` target **1.20.0+** (on 1.19.x the gate is experimental).
@@ -20,11 +20,13 @@ Three.js and Spector capture adapters remain experimental.
 (experimental, `AWWWARDS_MCP_ATLAS=1`). Do not run either against older
 servers. The 1.21 notes cover `scrollMode`/`virtualRoot`/`note` on
 `analyze_page_structure`, document-attribute preservation in converted builds,
-and Atlas sections proven nonvisual.
+and Atlas sections proven nonvisual. The 1.22 notes add
+`shortlist_references` (full/core only, not v2) and the opt-in
+`capture_scene_3d` `emit:"dossier"` 3D rebuild dossier.
 
-The next skills release tag is **`skills-v2026.11.19`**, pairing these notes
-with `awwwards-mcp` 1.21.0; `skills-v2026.11.16` is the previous tag and still
-carries the 1.20-era wording.
+The next skills release tag is **`skills-v2026.11.23`**, pairing these notes
+with `awwwards-mcp` 1.22.0; `skills-v2026.11.19` is the previous tag and still
+carries the 1.21-era wording.
 
 The `skills` CLI version tested is **1.7.6**.
 
@@ -97,7 +99,7 @@ Pin both the CLI and a release tag for a reproducible install (use the newest
 `skills-v*` tag):
 
 ```bash
-npx skills@1.7.6 add INSANE0777/awwwards-skills@skills-v2026.11.19
+npx skills@1.7.6 add INSANE0777/awwwards-skills@skills-v2026.11.23
 ```
 
 Or follow the default branch:
@@ -161,13 +163,14 @@ The server reads `AWWWARDS_MCP_PROFILE` once at startup. Set it in the server
 
 | Profile | Tools | Surface |
 |---|---|---|
-| `full` (default) | 41 (45 with Atlas) | Every 1.x tool. Examples in the skills use these names. `AWWWARDS_MCP_ATLAS=1` adds the four experimental Atlas tools. |
-| `core` | 13 | Build-loop subset, including `get_annual_categories`. Atlas does not change it. |
+| `full` (default) | 42 (46 with Atlas) | Every 1.x tool. Examples in the skills use these names. `AWWWARDS_MCP_ATLAS=1` adds the four experimental Atlas tools. |
+| `core` | 14 | Build-loop subset, including `get_annual_categories` and `shortlist_references`. Atlas does not change it. |
 | `v2` | 15 (16 with Atlas) | 10 consolidated tools plus 5 retained flat tools. Atlas adds `export_evidence_pack` and branches on existing tools. |
 
 Every skill links to its own copy of `v2-routing.md`, which maps each 1.x call to
 the v2 request object. In a `v2` session, a 1.x tool name is a routing error, not
-a broken install.
+a broken install. `shortlist_references` and the 3D dossier are full/core only;
+v2 stays at 15 tools (16 with Atlas).
 
 ## Optional browser dependencies
 
@@ -258,7 +261,7 @@ node --test scripts/skill-memory.test.mjs
 
 `AWWWARDS_SKIP_NETWORK=1 node scripts/validate-skills.mjs` skips the network
 check. Otherwise the validator compares every local `v2-routing.md` with the
-raw fixture from `awwwards-mcp` tag `v1.21.0`; if the network is unavailable it
+raw fixture from `awwwards-mcp` tag `v1.22.0`; if the network is unavailable it
 prints a skip instead of failing.
 
 ## Scope and fair use

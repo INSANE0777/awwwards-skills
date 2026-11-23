@@ -48,7 +48,7 @@ missing, ask only about that field. If the file is absent, proceed.
 Profile-blind detection: the server is unregistered only when no awwwards
 tools at all are available. A connected `v2` session intentionally has no
 `search_sites` or `list_categories`; recognize it by `search_references`
-and/or `get_index`. A connected `core` session registers 13 tools and does not
+and/or `get_index`. A connected `core` session registers 14 tools and does not
 include `list_categories`, so do not require it. If any awwwards tool
 responds, skip to step 1.
 
@@ -71,14 +71,13 @@ before the tools appear — say so and stop; preferences (step 1) can be
 collected now and persisted so the restarted session lands running.
 Optional env additions: `AWWWARDS_CACHE_DIR` (custom cache location),
 `AWWWARDS_AUTO_UPDATE=1` (background self-update on new releases),
-`AWWWARDS_MCP_PROFILE=core|full|v2` (`core` registers only the 13
-build-loop tools, including `get_annual_categories`; `full` exposes all 41
-(45 with `AWWWARDS_MCP_ATLAS=1`);
+`AWWWARDS_MCP_PROFILE=core|full|v2` (`core` registers only the 14
+build-loop tools, including `get_annual_categories`; `full` exposes all 42
+(46 with `AWWWARDS_MCP_ATLAS=1`);
 `v2` registers 10 consolidated tools plus 5 retained tools with their existing
 names and flat inputs (create_design_brief, build_project, verify_build,
-verify_flow, analyze_network_capture), 16 with Atlas; only the 34 replaced 1.x
-names
-disappear; default full;
+verify_flow, analyze_network_capture), 16 with Atlas; only the 36 replaced 1.x
+names disappear; default full;
 changing it requires a server restart). `AWWWARDS_MCP_ATLAS=1` is a separate
 opt-in flag for the experimental Atlas tools and CLI; it does not change
 `core`; see the `awwwards-atlas` skill. The old → new v2 mapping lives in

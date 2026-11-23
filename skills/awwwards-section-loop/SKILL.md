@@ -75,7 +75,10 @@ rather than slicing by band. Otherwise, treat the band list as the build order:
   subset and exact captured camera matrix, while parent transforms are lost and
   controls are never recreated. For shader evidence, `adapters:["spector"]`
   captures one drawing frame with command counts and capped shader source — not
-  arguments, state or raw capture. Slicing a shared-canvas page into
+  arguments, state or raw capture. For a bounded rebuild, `emit:"dossier"` on
+  `capture_scene_3d` writes a `scene-evidence-v2` pack with an R1-R4 class and
+  2-24 keyframes; `verify_build.scene3d` replays it 1:1. Workers, OffscreenCanvas,
+  WebGPU and static replay are still out of scope. Slicing a shared-canvas page into
   per-section captures produces sections that each reference a canvas
   none of them own.
 
@@ -208,7 +211,8 @@ re-run its section gate, lock, next. Whole-page desktop + 390 mobile parity last
   opt-in `scene3d` replays a
   `capture_scene_3d` pack on the build canvas as a separate gate with its own
   status/verdict; the gate is **stable from `awwwards-mcp` 1.20.0** and
-  experimental on 1.19.x. It never upgrades the legacy band pass, unstable
+  experimental on 1.19.x. A `scene-evidence-v2` dossier is accepted and replays
+  its 2-24 stops 1:1. It never upgrades the legacy band pass, unstable
   capture frames are rejected, and its build URL must resolve publicly (loopback
   is refused). It compares cropped canvas pixels only and does not infer
   camera, geometry or shaders, compare across viewports or image sizes, issue a
@@ -228,6 +232,8 @@ re-run its section gate, lock, next. Whole-page desktop + 390 mobile parity last
   Captured controls are never recreated and stay unresolved. Module-local
   scenes, parent transforms and unbound textures are lost, and `scene.json`
   frame references are basenames extracted from either Windows or POSIX paths.
+  `emit:"dossier"` classifies R1-R4 and records keyframes, but it is evidence,
+  not a static replay; workers/OffscreenCanvas and WebGPU stay unverified.
 - `capture_scene_3d` spector adapter - optional `spectorjs@0.9.33`; captures one
   WebGL frame with command counts/statuses and capped shader source. It needs a
   drawing frame, transfers no arguments/state/raw capture, and a missing package

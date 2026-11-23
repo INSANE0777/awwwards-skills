@@ -13,8 +13,9 @@ it to ground design decisions in real, proven references instead of guessing.
 > `get_site_elements`, `list_categories`, `get_annual_categories`,
 > `get_annual_nominees`, `get_annual_nominee`, `get_collections`,
 > `search_directory`, `new_winners`, `watch_site`, `capture_live_site`,
-> `analyze_page_structure`, `record_site_motion` and retained
-> `create_design_brief`. Examples below use 1.x names (default `full`). On
+> `analyze_page_structure`, `record_site_motion`, retained
+> `create_design_brief` and `shortlist_references`. Examples below use 1.x
+> names (default `full`). On
 > `AWWWARDS_MCP_PROFILE=v2`, use
 > `search_references {request:{kind:"sites", ...}}`,
 > `get_reference {request:{kind:"site_details", slug}}` or
@@ -71,7 +72,17 @@ Run this loop before building anything visual:
    Free-text queries are porter-stem + prefix-matched and BM25-ranked
    (`"magazines"` finds Magazine-tagged sites, best matches first); multi-word
    queries keep AND semantics — both tokens must hit the same site.
-3b. **Techniques registry:** `_memory/techniques.json` catalogs researched how-tos per domain (video-understanding, motion-detection, ui-structure, micro-interactions, images). Consult it when a step needs a method — it grows via the flywheel.
+3b. **Structured brief? Use the shortlist tool.** When the brief has 1-6
+   explicit criteria, call `shortlist_references` instead of ad-hoc searching.
+   It returns 3-5 references with evidence, explicit unknowns and a local
+   dossier (`shortlist.md`, offline `shortlist.html`, `shortlist.json`,
+   `reference-decision.json`). `must` criteria are **coverage requirements**,
+   not a per-candidate pass; `status` (`ok` / `partial` / `inconclusive`) covers
+   the returned list, not taste. Candidates that fail a hard constraint are
+   listed separately under `excluded` and do not count toward the limit. Read
+   the per-candidate unknowns; fill `reference-decision.json` yourself - the
+   tool never overwrites it. Not available in v2.
+3c. **Techniques registry:** `_memory/techniques.json` catalogs researched how-tos per domain (video-understanding, motion-detection, ui-structure, micro-interactions, images). Consult it when a step needs a method — it grows via the flywheel.
 4. **Synthesize the direction.** Once you have 2–5 shortlisted slugs, call `create_design_brief` with those slugs and the user's non-blank project goal. Optionally include `audience` and concrete `constraints`. Use the returned shared signals, deliberate outliers, build constraints, evidence, limitations, and **Interaction Plan** to define an original direction — do not copy any single reference. Apply only its evidence-backed cursor/hover, scroll/pin/scrub, entrance/reveal, easing, and duration cues. Treat empty or null interaction fields as missing evidence: do not invent effects, timings, or scroll behavior. Preserve the plan's `prefers-reduced-motion`, content-access, and keyboard-access guardrail. Set `includeStructure: true` only when optional page-band evidence is needed; it may run browser analysis for sources with usable live URLs. Cached Motion DNA is included when available, but the brief never records motion automatically.
 5. **Live reference URL named? Capture it full-page first.** (and later capture
    your own build the same way — compare both against each other) If the user
@@ -165,6 +176,7 @@ finer winner cuts:
 | Tool | Key params | Returns | Gotchas |
 |------|-----------|---------|---------|
 | `search_sites` | `query` (free text vs titles/tags), `color` (hex like `#404040`), `tags` (array of slugs), `technology` (slug), `award` (`sotd`\|`sotm`\|`soty`\|`nominees`\|`developer`\|`honorable`\|`ecommerce`\|`portfolio`\|`product`\|`typography`\|`businessServices`\|`noCode`), `count` (1–12, default 6), `page` (default 1), `responseMode` (`"full"` default or `"compact"`) | Full: text site cards + inline JPEG screenshots for each result. Compact: concise cards + up to two inline previews for the requested page. | Awwwards applies only one URL filter — priority color > award > technology > first tag; the rest are checked client-side (common technology spellings like `nextjs`/`three.js` are canonicalized to the live slugs). Winner-category filters verify by URL only and always re-scrape; nominee filters verify via the persisted nominee flag and are served from cache when fresh. Color searches always scrape live (never cached). Deep pagination is unavailable by design (robots.txt). On live-request failure, stale cache is served when present. Compact is opt-in for broad exploration; use default full results to judge screenshots and details/motion tools for shortlisted sites. |
+| `shortlist_references` | `brief`, 1-6 `criteria` (`must`/`nice`), optional `constraints`, `seedSlugs`, `limit` (3-5), `outDir` (absolute), `viewport`, `refresh` | 3-5 references (`recommend`/`consider`) + `excluded` hard failures; local `shortlist.md`, offline HTML, JSON and a blank `reference-decision.json` | `must` is coverage, not a per-candidate pass; `status` covers the returned list, not taste. `outDir` must be absolute and dedicated. v1-only, not in v2. |
 | `get_site_details` | `slug` (from `search_sites`, e.g. `l-i-s-a`) | Title, live URL, awards, color palette, technologies, design elements, description, full-size screenshot URL; inline screenshot when available | Cached 7 days; a parse that comes back all-empty is an error, not a quiet empty result. |
 | `get_site_elements` | `slug` | Numbered element list (image or video, with video URLs) + up to 8 inline poster JPEGs | Videos are mp4 URLs (posters only are shown inline). Elements feed from the same fetch as `get_site_details`. |
 | `list_categories` | none | JSON: award filters (with labels), every color hex and filter/tag slug, technology slugs, plus usage guidance | Cached 30 days. Call this whenever filter vocabulary is uncertain — awards and technology slugs included. |
